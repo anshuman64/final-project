@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "Intersection.h"
 
 #ifndef __GEOMETRY_H__
@@ -12,16 +14,25 @@ public:
 
 class Sphere : public Geometry {
 public:
-    glm::vec3 position;
+    glm::vec3 center;
     float radius;
 
     Intersection intersect(Ray* ray) {
         Intersection hit;
 
+        glm::vec3 diff = ray->point - center;
+        float t = glm::dot(-1.0f * ray->direction, diff) - sqrt(pow(glm::dot(ray->direction, diff),2) - pow(glm::length(diff), 2) + pow(radius,2) );
+
+        if (t > 0) {
+            glm::vec3 position = ray->point + t * ray->direction;
+            glm::vec3 normal = glm::normalize(position - center);
+            hit.update(position, -1.0f * ray->direction, normal, t);
+        }
+        
         return hit;
     }
 
-    Sphere(float x, float y, float z, float r) : position(glm::vec3(x, y, z)), radius(r) {}
+    Sphere(float x, float y, float z, float r) : center(glm::vec3(x, y, z)), radius(r) {}
 };
 
 
@@ -31,6 +42,8 @@ public:
     glm::vec3 normals[3];
 
     Intersection intersect(Ray* ray) {
+        Intersection hit;
+
         glm::mat4 A;
         A[0] = glm::vec4(vertices[0], 1.0f);
         A[1] = glm::vec4(vertices[1], 1.0f);
@@ -40,7 +53,6 @@ public:
         glm::vec4 y = glm::vec4(ray->point, 1.0f);
         glm::vec4 x = glm::inverse(A)*y;
 
-        Intersection hit;
         if (x.x >= 0 && x.y >= 0 && x.z >= 0 && x.w >= 0) {
             glm::vec3 position = x.x * vertices[0] + x.y * vertices[1] + x.z * vertices[2];
             glm::vec3 normal = glm::normalize(x.x * normals[0] + x.y * normals[1] + x.z * normals[2]);
