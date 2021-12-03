@@ -22,6 +22,8 @@
 #include <glm/glm.hpp>
 
 #include "Scene.h"
+#include "Sphere.h"
+#include "Triangle.h"
 
 
 using namespace std;
@@ -30,9 +32,13 @@ using namespace std;
 // Parse File
 /////////////////////
 
+void rightmultiply(const glm::mat4 & M, stack<glm::mat4> &transforms) {
+    glm::mat4 &T = transforms.top();
+    T = T * M;
+}
+
 // Function to read the input data values
-bool readvals(stringstream &s, const int numvals, GLfloat* values)
-{
+bool readvals(stringstream &s, const int numvals, GLfloat* values) {
     for (int i = 0; i < numvals; i++) {
         s >> values[i];
         if (s.fail()) {
@@ -43,8 +49,7 @@ bool readvals(stringstream &s, const int numvals, GLfloat* values)
     return true;
 }
 
-void readfile(const char* filename, Scene* scene)
-{
+void readfile(const char* filename, Scene* scene) {
     string str, cmd;
     ifstream in;
 
@@ -66,8 +71,8 @@ void readfile(const char* filename, Scene* scene)
 
     in.open(filename);
     if (in.is_open()) {
-        stack <glm::mat4> transfstack;
-        transfstack.push(glm::mat4(1.0));  // identity
+        stack <glm::mat4> transforms;
+        transforms.push(glm::mat4(1.0));  // identity
 
         getline (in, str);
         while (in) {
@@ -157,13 +162,13 @@ void readfile(const char* filename, Scene* scene)
                 } else if (cmd == "tri") {
                     validinput = readvals(s, 3, values);
                     if (validinput) {
-                        Triangle* triangle = new Triangle(scene->vertices[values[0]],scene->vertices[values[1]],scene->vertices[values[2]]);
+                        Triangle* triangle = new Triangle(scene->vertices[values[0]],scene->vertices[values[1]],scene->vertices[values[2]], transforms.top());
                         scene->geometries.push_back(triangle);
                     }
                 } else if (cmd == "sphere") {
                     validinput = readvals(s, 4, values);
                     if (validinput) {
-                        Sphere* sphere = new Sphere(values[0], values[1], values[2], values[3]);
+                        Sphere* sphere = new Sphere(values[0], values[1], values[2], values[3], transforms.top());
                         scene->geometries.push_back(sphere);
                     }
                 }
@@ -201,48 +206,32 @@ void readfile(const char* filename, Scene* scene)
                 else if (cmd == "translate") {
                     validinput = readvals(s,3,values);
                     if (validinput) {
+                        glm::mat4 translateMatrix = glm::translate(glm::mat4(), glm::vec3(values[0], values[1], values[2]));
 
-                        glm::mat4 translateMatrix;
-
-                        // YOUR CODE HERE
-                        // Implement a translation matrix.  You can just use glm built in functions
-                        // if you want.
-
-                        // rightmultiply(translateMatrix, transfstack);
+                        rightmultiply(translateMatrix, transforms);
                     }
                 } else if (cmd == "scale") {
                     validinput = readvals(s,3,values);
                     if (validinput) {
+                        glm::mat4 scaleMatrix = glm::scale(glm::mat4(), glm::vec3(values[0], values[1], values[2]));
 
-                        glm::mat4 scaleMatrix;
-
-                        // YOUR CODE HERE
-                        // Implement a scale matrix.  You can just use glm built in functions
-                        // if you want.
-
-                        // rightmultiply(scaleMatrix, transfstack);
+                        rightmultiply(scaleMatrix, transforms);
                     }
                 } else if (cmd == "rotate") {
                     validinput = readvals(s,4,values);
                     if (validinput) {
-
                         glm::vec3 axis = glm::normalize(glm::vec3(values[0], values[1], values[2]));
-                        glm::mat4 rotateMatrix;
+                        glm::mat4 rotateMatrix = glm::rotate(glm::mat4(), values[3], axis);
 
-                        // YOUR CODE HERE
-                        // Implement a rotation matrix.  You can just use glm built in functions
-                        // if you want.
-
-                        // rightmultiply(rotateMatrix, transfstack);
-
+                        rightmultiply(rotateMatrix, transforms);
                     }
                 } else if (cmd == "pushTransform") {
-                    transfstack.push(transfstack.top());
+                    transforms.push(transforms.top());
                 } else if (cmd == "popTransform") {
-                    if (transfstack.size() <= 1) {
+                    if (transforms.size() <= 1) {
                         cerr << "Stack has no elements.  Cannot Pop\n";
                     } else {
-                        transfstack.pop();
+                        transforms.pop();
                     }
                 }
 
