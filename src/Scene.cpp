@@ -4,7 +4,7 @@
 #include "Scene.h"
 #include "Intersection.h"
 
-Ray* Scene::rayThruPixel(int i, int j) {
+Ray Scene::rayThruPixel(int i, int j) {
     glm::vec3 point = camera->eye;
 
     float fovy_rad = camera->fovy * M_PI/180.0f;
@@ -17,24 +17,22 @@ Ray* Scene::rayThruPixel(int i, int j) {
 
     glm::vec3 direction = glm::normalize(a * glm::vec3(camera->cam[0]) + b * glm::vec3(camera->cam[1]) - glm::vec3(camera->cam[2]));
 
-    Ray* ray = new Ray(point, direction);
+    Ray ray = Ray(point, direction);
     return ray;
 }
 
 
-Intersection* Scene::intersect(Ray* ray) {
+Intersection Scene::intersect(Ray* ray) {
     float dist = std::numeric_limits<float>::infinity();
-    Intersection* hit = new Intersection();
+    Intersection hit;
 
     for (int i = 0; i < geometries.size(); i++) {
-        Intersection* hit_temp = geometries[i]->intersect(ray);
+        Intersection hit_temp = geometries[i]->intersect(ray);
 
-        if (hit_temp->is_hit && hit_temp->distance < dist) {
-            dist = hit_temp->distance;
-            hit->update(hit_temp);
+        if (hit_temp.is_hit && hit_temp.distance < dist) {
+            dist = hit_temp.distance;
+            hit = hit_temp;
         }
-
-        delete hit_temp;
     }
 
     return hit;
@@ -52,10 +50,10 @@ glm::vec3 Scene::findColor(Intersection* hit) {
             // Cast shadow ray
             glm::vec3 l = lights[i]->getDirection(hit->position);
             glm::vec3 offset_position = hit->position + glm::vec3(0.0f, 0.0f, 0.001f); // handle z-fighting
-            Ray* ray = new Ray(offset_position, l);
-            Intersection* shadow_hit = intersect(ray);
+            Ray ray = Ray(offset_position, l);
+            Intersection shadow_hit = intersect(&ray);
 
-            if (not shadow_hit->is_hit || not is_shadows) {
+            if (not shadow_hit.is_hit || not is_shadows) {
                 // Add diffuse
                 glm::vec3 light_contribution = hit->material->diffuse * std::max(glm::dot(hit->normal, l), 0.0f);
                 
@@ -70,9 +68,6 @@ glm::vec3 Scene::findColor(Intersection* hit) {
 
                 color += light_contribution;
             }
-
-            delete ray;
-            delete shadow_hit;
         }
 
         color = 255.0f * color;
@@ -92,13 +87,10 @@ Image Scene::rayTrace() {
 
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
-            Ray* ray = rayThruPixel(i, j);
-            Intersection* hit = intersect(ray);
-            glm::vec3 color = findColor(hit);
+            Ray ray = rayThruPixel(i, j);
+            Intersection hit = intersect(&ray);
+            glm::vec3 color = findColor(&hit);
             image[i][j] = color;
-
-            delete ray;
-            delete hit;
         }
     }
 

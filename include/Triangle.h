@@ -8,8 +8,8 @@ public:
     glm::vec3 vertices[3];
     glm::vec3 normals[3];
 
-    Intersection* intersect(Ray* ray) {
-        Intersection* hit = new Intersection();
+    Intersection intersect(Ray* ray) {
+        Intersection hit;
 
         // Determine intersection
         glm::mat4 A;
@@ -26,7 +26,7 @@ public:
             glm::vec3 position = x.x * vertices[0] + x.y * vertices[1] + x.z * vertices[2];
             glm::vec3 normal = glm::normalize(x.x * normals[0] + x.y * normals[1] + x.z * normals[2]);
 
-            hit->update(position, -1.0f * ray->direction, normal, x.w, material);
+            hit.update(position, -1.0f * ray->direction, normal, x.w, material);
         }
 
         return hit;

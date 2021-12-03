@@ -9,8 +9,8 @@ public:
     float radius;
     glm::mat4 transform;
 
-    Intersection* intersect(Ray* ray) {
-        Intersection* hit = new Intersection();
+    Intersection intersect(Ray* ray) {
+        Intersection hit;
 
         // Transform ray to model coordinates
         glm::vec3 model_point = glm::vec3(glm::inverse(transform) * glm::vec4(ray->point, 1.0f));
@@ -30,7 +30,7 @@ public:
             glm::vec3 position = glm::vec3(transform * glm::vec4(model_position, 1.0f));
             glm::vec3 normal = glm::normalize(glm::inverse(glm::transpose(A)) * model_normal);
             float t = glm::length(position - ray->point);
-            hit->update(position, -1.0f * ray->direction, normal, t, material);
+            hit.update(position, -1.0f * ray->direction, normal, t, material);
         }
         
         return hit;

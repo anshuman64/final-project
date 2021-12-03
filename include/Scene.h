@@ -25,8 +25,8 @@ public:
 
     bool is_shadows = true;
 
-    Ray* rayThruPixel(int i, int j);
-    Intersection* intersect(Ray* ray);
+    Ray rayThruPixel(int i, int j);
+    Intersection intersect(Ray* ray);
     glm::vec3 findColor(Intersection* hit);
     Image rayTrace();
 

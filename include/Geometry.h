@@ -7,7 +7,7 @@
 class Geometry {
 public:
     Material* material;
-    virtual Intersection* intersect(Ray* ray) = 0;
+    virtual Intersection intersect(Ray* ray) = 0;
     
     virtual ~Geometry() {
         delete material;

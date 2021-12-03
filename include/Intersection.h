@@ -22,17 +22,6 @@ public:
     bool      is_hit = false;
     Material* material;
 
-    Intersection() {};
-
-    void update(Intersection* _intersection) {
-        position  = _intersection->position;
-        direction = _intersection->direction;
-        normal    = _intersection->normal;
-        distance  = _intersection->distance;
-        is_hit    = _intersection->is_hit;
-        material  = _intersection->material;
-    }
-
     void update(glm::vec3 _position, glm::vec3 _direction, glm::vec3 _normal, float _distance, Material* _material) {
         position  = _position;
         direction = _direction;
