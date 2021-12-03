@@ -135,7 +135,7 @@ tri 4 5 6
 tri 4 6 7 
 
 
-# Now draw the spheres
+## Now draw the spheres
 
 diffuse 0 1 0 
 popTransform

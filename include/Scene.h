@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Geometry.h"
 #include "Intersection.h"
+#include "Light.h"
 
 #ifndef __SCENE_H__
 #define __SCENE_H__
@@ -20,9 +21,12 @@ public:
     Camera* camera;
     std::vector<glm::vec3> vertices;
     std::vector<Geometry*> geometries;
+    std::vector<Light*> lights;
 
-    Ray rayThruPixel(int i, int j);
-    Intersection intersect(Ray* ray);
+    bool is_shadows = true;
+
+    Ray* rayThruPixel(int i, int j);
+    Intersection* intersect(Ray* ray);
     glm::vec3 findColor(Intersection* hit);
     Image rayTrace();
 

@@ -59,8 +59,6 @@ void readfile(const char* filename, Scene* scene) {
     // Lights
     int numused = 0;
     const int numLights = 10; // max 10 point lights.  You can increase this if you want to add more lights.
-    float lightposn[3 * numLights];
-    float lightcolor[3 * numLights];
 
     // Materials
     glm::vec3 ambient = glm::vec3(0.2f, 0.2f, 0.2f);
@@ -95,11 +93,7 @@ void readfile(const char* filename, Scene* scene) {
                         scene->max_depth = values[0];
                     }
                 } else if (cmd == "output") {
-                    // const char* string_values;
-                    // validinput = readvals(s, 1, string_values);
-                    // if (validinput) {
-                    //     scene->filename = string_values;
-                    // }
+                    // Do nothing
                 }
 
                 // CAMERA //
@@ -122,21 +116,33 @@ void readfile(const char* filename, Scene* scene) {
                     } else {
                         validinput = readvals(s, 6, values); // Position/color for lts.
                         if (validinput) {
-                            for(int i = 0; i < 3; i++){
-                                lightposn[numused*3 + i] = values[i];
-                                lightcolor[numused*3 + i] = values[i + 3];
-                            }
+                            glm::vec3 location = glm::vec3(values[0], values[1], values[2]);
+                            glm::vec3 color = glm::vec3(values[3], values[4], values[5]);
+
+                            PointLight* light = new PointLight(location, color);
+                            scene->lights.push_back(light);
+
                             ++numused;
                         }
                     }
                 } else if (cmd == "directional") {
-                    // YOUR CODE HERE.  You can use point lights as an example, or
-                    // implement both your own way.
+                    if (numused == numLights) { // No more Lights
+                        cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
+                    } else {
+                        validinput = readvals(s, 6, values); // Position/color for lts.
+                        if (validinput) {
+                            glm::vec3 location = glm::vec3(values[0], values[1], values[2]);
+                            glm::vec3 color = glm::vec3(values[3], values[4], values[5]);
+
+                            DirectionalLight* light = new DirectionalLight(location, color);
+                            scene->lights.push_back(light);
+
+                            ++numused;
+                        }
+                    }
                 } else if (cmd == "attenuation") {
-                    // YOUR CODE HERE.
-
                     if (validinput) {
-
+                        // Do nothing
                     }
                 }
 
@@ -215,7 +221,8 @@ void readfile(const char* filename, Scene* scene) {
                     validinput = readvals(s,4,values);
                     if (validinput) {
                         glm::vec3 axis = glm::normalize(glm::vec3(values[0], values[1], values[2]));
-                        glm::mat4 rotateMatrix = glm::rotate(glm::mat4(), values[3], axis);
+                        float angle = values[3] * M_PI/180.0f;
+                        glm::mat4 rotateMatrix = glm::rotate(glm::mat4(), angle, axis);
 
                         rightmultiply(rotateMatrix, transforms);
                     }
@@ -249,7 +256,7 @@ void readfile(const char* filename, Scene* scene) {
 int main(int argc, char** argv)
 {
     Scene scene;
-    readfile("./testscenes/scene3.test", &scene);
+    readfile("./submissionscenes/scene4-diffuse.test", &scene);
     Image image = scene.rayTrace();
 
     // Take screenshot
