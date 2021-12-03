@@ -61,13 +61,13 @@ void readfile(const char* filename, Scene* scene) {
     const int numLights = 10; // max 10 point lights.  You can increase this if you want to add more lights.
     float lightposn[3 * numLights];
     float lightcolor[3 * numLights];
-    float ambient[3];
 
     // Materials
-    float diffuse[3];
-    float specular[3];
-    float emission[3];
-    float shininess;
+    glm::vec3 ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+    glm::vec3 diffuse = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 specular = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 emission = glm::vec3(0.0f, 0.0f, 0.0f);
+    float shininess = 0.0f;
 
     in.open(filename);
     if (in.is_open()) {
@@ -138,13 +138,6 @@ void readfile(const char* filename, Scene* scene) {
                     if (validinput) {
 
                     }
-                } else if (cmd == "ambient") {
-                    validinput = readvals(s, 3, values); // colors
-                    // YOUR CODE HERE
-
-                    if (validinput) {
-
-                    }
                 }
 
                 // GEOMETRY //
@@ -162,13 +155,15 @@ void readfile(const char* filename, Scene* scene) {
                 } else if (cmd == "tri") {
                     validinput = readvals(s, 3, values);
                     if (validinput) {
-                        Triangle* triangle = new Triangle(scene->vertices[values[0]],scene->vertices[values[1]],scene->vertices[values[2]], transforms.top());
+                        Material* material = new Material(ambient, diffuse, specular, emission, shininess);
+                        Triangle* triangle = new Triangle(scene->vertices[values[0]],scene->vertices[values[1]],scene->vertices[values[2]], transforms.top(), material);
                         scene->geometries.push_back(triangle);
                     }
                 } else if (cmd == "sphere") {
                     validinput = readvals(s, 4, values);
                     if (validinput) {
-                        Sphere* sphere = new Sphere(values[0], values[1], values[2], values[3], transforms.top());
+                        Material* material = new Material(ambient, diffuse, specular, emission, shininess);
+                        Sphere* sphere = new Sphere(values[0], values[1], values[2], values[3], transforms.top(), material);
                         scene->geometries.push_back(sphere);
                     }
                 }
@@ -177,29 +172,28 @@ void readfile(const char* filename, Scene* scene) {
                 else if (cmd == "diffuse") {
                   validinput = readvals(s, 3, values);
                   if (validinput) {
-                      for (i = 0; i < 3; i++) {
-                          diffuse[i] = values[i];
-                      }
+                      diffuse = glm::vec3(values[0], values[1], values[2]);
                   }
                 } else if (cmd == "specular") {
                   validinput = readvals(s, 3, values);
                   if (validinput) {
-                      for (i = 0; i < 3; i++) {
-                          specular[i] = values[i];
-                      }
+                      specular = glm::vec3(values[0], values[1], values[2]);
                   }
                 } else if (cmd == "emission") {
                   validinput = readvals(s, 3, values);
                   if (validinput) {
-                      for (i = 0; i < 3; i++) {
-                          emission[i] = values[i];
-                      }
+                      emission = glm::vec3(values[0], values[1], values[2]);
                   }
                 } else if (cmd == "shininess") {
                   validinput = readvals(s, 1, values);
                   if (validinput) {
                       shininess = values[0];
                   }
+                } else if (cmd == "ambient") {
+                    validinput = readvals(s, 3, values);
+                    if (validinput) {
+                      ambient = glm::vec3(values[0], values[1], values[2]);
+                    }
                 }
 
                 // TRANSFORMATIONS //

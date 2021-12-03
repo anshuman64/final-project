@@ -30,13 +30,15 @@ public:
             glm::vec3 position = glm::vec3(transform * glm::vec4(model_position, 1.0f));
             glm::vec3 normal = glm::normalize(glm::inverse(glm::transpose(A)) * model_normal);
             float t = glm::length(position - ray->point);
-            hit.update(position, -1.0f * ray->direction, normal, t);
+            hit.update(position, -1.0f * ray->direction, normal, t, material);
         }
         
         return hit;
     }
 
-    Sphere(float x, float y, float z, float r, glm::mat4 _transform) : center(glm::vec3(x, y, z)), radius(r), transform(_transform) {}
+    Sphere(float x, float y, float z, float r, glm::mat4 _transform, Material* _material) : center(glm::vec3(x, y, z)), radius(r), transform(_transform) {
+        material = _material;
+    }
 };
 
 #endif

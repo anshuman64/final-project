@@ -26,13 +26,13 @@ public:
             glm::vec3 position = x.x * vertices[0] + x.y * vertices[1] + x.z * vertices[2];
             glm::vec3 normal = glm::normalize(x.x * normals[0] + x.y * normals[1] + x.z * normals[2]);
 
-            hit.update(position, -1.0f * ray->direction, normal, x.w);
+            hit.update(position, -1.0f * ray->direction, normal, x.w, material);
         }
 
         return hit;
     }
 
-    Triangle(glm::vec3 vertex0, glm::vec3 vertex1, glm::vec3 vertex2, glm::mat4 transform) {
+    Triangle(glm::vec3 vertex0, glm::vec3 vertex1, glm::vec3 vertex2, glm::mat4 transform, Material* _material) {
         // Transform and store each vertex
         vertices[0] = glm::vec3(transform * glm::vec4(vertex0, 1.0f));
         vertices[1] = glm::vec3(transform * glm::vec4(vertex1, 1.0f));
@@ -46,6 +46,8 @@ public:
         normals[0] = glm::normalize(glm::cross(edge1, edge2));
         normals[1] = glm::normalize(glm::cross(edge1, edge3));
         normals[2] = glm::normalize(glm::cross(edge2, edge3));
+
+        material = _material;
     }
 };
 

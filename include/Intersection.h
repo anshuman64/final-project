@@ -1,3 +1,5 @@
+#include "Material.h"
+
 #ifndef __INTERSECTION_H__
 #define __INTERSECTION_H__
 
@@ -16,16 +18,17 @@ public:
     glm::vec3 position;
     glm::vec3 direction;
     glm::vec3 normal;
-    // Geometry  geometry;
     float     distance;
     bool      is_hit = false;
+    Material* material;
 
-    void update(glm::vec3 _position, glm::vec3 _direction, glm::vec3 _normal, float _distance) {
+    void update(glm::vec3 _position, glm::vec3 _direction, glm::vec3 _normal, float _distance, Material* _material) {
         position = _position;
         direction = _direction;
         normal = _normal;
         distance = _distance;
         is_hit = true;
+        material = _material;
     }
 };
 

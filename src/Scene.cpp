@@ -43,7 +43,7 @@ glm::vec3 Scene::findColor(Intersection* hit) {
     glm::vec3 color = glm::vec3(0.0f, 0.0f, 0.0f);
 
     if (hit->is_hit) {
-        color = glm::vec3(255.0f, 0.0f, 0.0f);
+        color = 255.0f * hit->material->ambient;
     }
 
     return color;
