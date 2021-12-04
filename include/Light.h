@@ -5,36 +5,25 @@ class Light {
 public:
     glm::vec3 location;
     glm::vec3 color;
-    glm::vec3 attenuation;
+    bool is_directional = false;
+    glm::vec3 attenuation = glm::vec3(1.0f, 0.0f, 0.0f);
 
-    virtual glm::vec3 getDirection(glm::vec3 position) = 0;
-    
-    virtual ~Light() {};
-};
-
-class PointLight : public Light {
-public:
-    PointLight(glm::vec3 _location, glm::vec3 _color) {
+    Light(glm::vec3 _location, glm::vec3 _color, bool _is_directional, glm::vec3 _attenuation) {
         location = _location;
-        color = _color;
-        attenuation = glm::vec3(1.0f, 0.0f, 0.0f);
+        color    = _color;
+        is_directional = _is_directional;
+
+        if (not is_directional) {
+            attenuation = _attenuation;
+        }
     }
 
     glm::vec3 getDirection(glm::vec3 position) {
-        return glm::normalize(location - position);
-    }
-};
-
-class DirectionalLight : public Light {
-public:
-    DirectionalLight(glm::vec3 _location, glm::vec3 _color) {
-        location = _location;
-        color = _color;
-        attenuation = glm::vec3(0.0f, 0.0f, 1.0f);
-    }
-
-    glm::vec3 getDirection(glm::vec3 position) {
-        return location;
+        if (is_directional) {
+            return glm::normalize(location);
+        } else {
+            return glm::normalize(location - position);
+        }
     }
 };
 

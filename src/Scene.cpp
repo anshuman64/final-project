@@ -39,45 +39,60 @@ Intersection Scene::intersect(Ray* ray) {
 }
 
 
-glm::vec3 Scene::findColor(Intersection* hit) {
+glm::vec3 Scene::findColor(Intersection* hit, bool use_shadows, bool use_mirror, int mirror_depth) {
     glm::vec3 color = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 offset_hit_position;
 
     if (hit->is_hit) {
         // Add ambient + emission
         color = hit->material->ambient + hit->material->emission;
 
         for (int i = 0; i < lights.size(); i++) {
-            // Cast shadow ray
-            glm::vec3 l = lights[i]->getDirection(hit->position);
-            glm::vec3 offset_position = hit->position + glm::vec3(0.0f, 0.0f, 0.001f); // handle z-fighting
-            Ray ray = Ray(offset_position, l);
-            Intersection shadow_hit = intersect(&ray);
+            glm::vec3 light_direction = lights[i]->getDirection(hit->position);
+            float light_distance = glm::length(lights[i]->location - hit->position);
+            Intersection shadow_hit;
 
-            if (not shadow_hit.is_hit || not is_shadows) {
+            if (_use_shadows) {
+                // Cast shadow ray
+                offset_hit_position = hit->position + 0.001f * light_direction; // handle z-fighting
+                Ray shadow_ray = Ray(offset_hit_position, light_direction);
+                shadow_hit = intersect(&shadow_ray);
+            }
+            
+            if ( (lights[i]->is_directional && not shadow_hit.is_hit) || (not lights[i]->is_directional && shadow_hit.distance > light_distance) ) {
                 // Add diffuse
-                glm::vec3 light_contribution = hit->material->diffuse * std::max(glm::dot(hit->normal, l), 0.0f);
+                glm::vec3 light_contribution = hit->material->diffuse * std::max(glm::dot(hit->normal, light_direction), 0.0f);
                 
                 // Add specular
-                glm::vec3 h = glm::normalize(hit->direction + l);
-                light_contribution += hit->material->specular * std::pow(std::max(glm::dot(hit->normal, h), 0.0f), hit->material->shininess);
+                glm::vec3 half_vector = glm::normalize(hit->direction + light_direction);
+                light_contribution += hit->material->specular * std::pow(std::max(glm::dot(hit->normal, half_vector), 0.0f), hit->material->shininess);
                 
                 // Add attenuation
-                float r = glm::length(lights[i]->location - hit->position);
-                float a = lights[i]->attenuation.x + lights[i]->attenuation.y * r + lights[i]->attenuation.z * std::pow(r,2);
-                light_contribution = light_contribution / a;
+                float total_attenuation = lights[i]->attenuation.x + lights[i]->attenuation.y * light_distance + lights[i]->attenuation.z * std::pow(light_distance,2);
+                light_contribution = lights[i]->color * light_contribution / total_attenuation;
 
                 color += light_contribution;
             }
         }
 
-        color = 255.0f * color;
+        if (use_mirror && mirror_depth < max_depth) {
+            glm::vec3 mirror_direction = 2 * glm::dot(hit->normal, hit->direction) * hit->normal - hit->direction;
+            offset_hit_position = hit->position + 0.001f * mirror_direction;
+            Ray mirror_ray = Ray(offset_hit_position, mirror_direction);
+            Intersection mirror_hit = intersect(&mirror_ray);
+            color += hit->material->specular * findColor(&mirror_hit, use_shadows, use_mirror, mirror_depth+1);
+        }
+
+        if (mirror_depth == 0) {
+            color = 255.0f * color;
+        }
     }
 
     return color;
 }
 
 
-Image Scene::rayTrace() {
+Image Scene::rayTrace(bool use_shadows, bool use_mirror) {
     Image image;
     image.resize(width);
 
@@ -89,7 +104,7 @@ Image Scene::rayTrace() {
         for (int i = 0; i < width; i++) {
             Ray ray = rayThruPixel(i, j);
             Intersection hit = intersect(&ray);
-            glm::vec3 color = findColor(&hit);
+            glm::vec3 color = findColor(&hit, use_shadows, use_mirror, 0);
             image[i][j] = color;
         }
     }

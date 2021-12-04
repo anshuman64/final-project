@@ -59,6 +59,7 @@ void readfile(const char* filename, Scene* scene) {
     // Lights
     int numused = 0;
     const int numLights = 10; // max 10 point lights.  You can increase this if you want to add more lights.
+    glm::vec3 attenuation = glm::vec3(0.0f, 0.0f, 1.0f);
 
     // Materials
     glm::vec3 ambient = glm::vec3(0.2f, 0.2f, 0.2f);
@@ -119,7 +120,7 @@ void readfile(const char* filename, Scene* scene) {
                             glm::vec3 location = glm::vec3(values[0], values[1], values[2]);
                             glm::vec3 color = glm::vec3(values[3], values[4], values[5]);
 
-                            PointLight* light = new PointLight(location, color);
+                            Light* light = new Light(location, color, false, attenuation);
                             scene->lights.push_back(light);
 
                             ++numused;
@@ -134,15 +135,16 @@ void readfile(const char* filename, Scene* scene) {
                             glm::vec3 location = glm::vec3(values[0], values[1], values[2]);
                             glm::vec3 color = glm::vec3(values[3], values[4], values[5]);
 
-                            DirectionalLight* light = new DirectionalLight(location, color);
+                            Light* light = new Light(location, color, true, attenuation);
                             scene->lights.push_back(light);
 
                             ++numused;
                         }
                     }
                 } else if (cmd == "attenuation") {
+                    validinput = readvals(s, 3, values);
                     if (validinput) {
-                        // Do nothing
+                        attenuation = glm::vec3(values[0], values[1], values[2]);
                     }
                 }
 
@@ -256,8 +258,8 @@ void readfile(const char* filename, Scene* scene) {
 int main(int argc, char** argv)
 {
     Scene scene;
-    readfile("./submissionscenes/scene4-diffuse.test", &scene);
-    Image image = scene.rayTrace();
+    readfile("./submissionscenes/scene6.test", &scene);
+    Image image = scene.rayTrace(true, true);
 
     // Take screenshot
     FreeImage_Initialise();

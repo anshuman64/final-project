@@ -18,8 +18,8 @@ public:
     glm::vec3 position;
     glm::vec3 direction;
     glm::vec3 normal;
-    float     distance;
-    bool      is_hit = false;
+    float     distance = std::numeric_limits<float>::infinity();
+    bool      is_hit   = false;
     Material* material;
 
     void update(glm::vec3 _position, glm::vec3 _direction, glm::vec3 _normal, float _distance, Material* _material) {

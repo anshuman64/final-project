@@ -23,11 +23,9 @@ public:
     std::vector<Geometry*> geometries;
     std::vector<Light*> lights;
 
-    bool is_shadows = true;
-
     Ray rayThruPixel(int i, int j);
     Intersection intersect(Ray* ray);
-    glm::vec3 findColor(Intersection* hit);
+    glm::vec3 findColor(Intersection* hit, bool _use_shadows, int mirror_depth);
     Image rayTrace();
 
     ~Scene() {
