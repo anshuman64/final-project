@@ -25,8 +25,8 @@ public:
 
     Ray rayThruPixel(int i, int j);
     Intersection intersect(Ray* ray);
-    glm::vec3 findColor(Intersection* hit, bool _use_shadows, int mirror_depth);
-    Image rayTrace();
+    glm::vec3 findColor(Intersection* hit, bool use_shadows, bool use_mirror, int mirror_depth);
+    Image rayTrace(bool use_shadows, bool use_mirror);
 
     ~Scene() {
         delete camera;

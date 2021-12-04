@@ -52,7 +52,7 @@ glm::vec3 Scene::findColor(Intersection* hit, bool use_shadows, bool use_mirror,
             float light_distance = glm::length(lights[i]->location - hit->position);
             Intersection shadow_hit;
 
-            if (_use_shadows) {
+            if (use_shadows) {
                 // Cast shadow ray
                 offset_hit_position = hit->position + 0.001f * light_direction; // handle z-fighting
                 Ray shadow_ray = Ray(offset_hit_position, light_direction);
@@ -82,10 +82,6 @@ glm::vec3 Scene::findColor(Intersection* hit, bool use_shadows, bool use_mirror,
             Intersection mirror_hit = intersect(&mirror_ray);
             color += hit->material->specular * findColor(&mirror_hit, use_shadows, use_mirror, mirror_depth+1);
         }
-
-        if (mirror_depth == 0) {
-            color = 255.0f * color;
-        }
     }
 
     return color;
@@ -105,7 +101,7 @@ Image Scene::rayTrace(bool use_shadows, bool use_mirror) {
             Ray ray = rayThruPixel(i, j);
             Intersection hit = intersect(&ray);
             glm::vec3 color = findColor(&hit, use_shadows, use_mirror, 0);
-            image[i][j] = color;
+            image[i][j] = 255.0f * color;
         }
     }
 

@@ -59,7 +59,7 @@ void readfile(const char* filename, Scene* scene) {
     // Lights
     int numused = 0;
     const int numLights = 10; // max 10 point lights.  You can increase this if you want to add more lights.
-    glm::vec3 attenuation = glm::vec3(0.0f, 0.0f, 1.0f);
+    glm::vec3 attenuation = glm::vec3(1.0f, 0.0f, 0.0f);
 
     // Materials
     glm::vec3 ambient = glm::vec3(0.2f, 0.2f, 0.2f);
@@ -258,8 +258,11 @@ void readfile(const char* filename, Scene* scene) {
 int main(int argc, char** argv)
 {
     Scene scene;
-    readfile("./submissionscenes/scene6.test", &scene);
-    Image image = scene.rayTrace(true, true);
+    readfile("./submissionscenes/scene5.test", &scene);
+
+    bool use_shadows = false;
+    bool use_mirror  = false;
+    Image image = scene.rayTrace(use_shadows, use_mirror);
 
     // Take screenshot
     FreeImage_Initialise();
@@ -276,7 +279,6 @@ int main(int argc, char** argv)
         }
     }
     
-    // FIBITMAP* img = FreeImage_ConvertFromRawBits(image.data(), scene.width, scene.height, scene.width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
     std::cout << "Saving screenshot: " << scene.filename << std::endl;
     FreeImage_Save(FIF_PNG, img, scene.filename, 0);
     FreeImage_DeInitialise();
