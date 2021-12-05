@@ -260,18 +260,37 @@ int main(int argc, char* argv[])
     Scene scene;
     readfile(argv[1], &scene);
 
-    bool use_shadows = true;
-    bool use_mirror  = true;
+    bool  use_shadows = true;
+    bool  use_mirror  = true;
+    bool  use_gi = true;
+    int   K = 1;
+    float lambda = 0.5f;
 
-    for (int i = 1; i < argc; i++) {
+    for (int i = 2; i < argc; i++) {
         if (string(argv[i]) == "no_shadows") {
+            std::cout << "no_shadows";
             use_shadows = false;
         } else if (string(argv[i]) == "no_mirror") {
+            std::cout << "no_mirror";
             use_mirror = false;
+        } else if (string(argv[i]) == "no_gi") {
+            std::cout << "no_gi";
+            use_gi = false;
+        } else {
+            float value = isdigit(atoi(argv[i]));
+
+            if (int(value) == value) {
+                K = value;
+            } else {
+                lambda = value;
+            }
         }
     }
 
-    Image image = scene.rayTrace(use_shadows, use_mirror);
+    std::cout << "K = " << std::to_string(K) << std::endl;
+    std::cout << "lambda = " << std::to_string(lambda) << std::endl;
+
+    Image image = scene.rayTrace(use_shadows, use_mirror, use_gi, K, lambda);
 
     // Take screenshot
     FreeImage_Initialise();

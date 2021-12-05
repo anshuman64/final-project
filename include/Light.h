@@ -26,6 +26,13 @@ public:
             return glm::normalize(location - position);
         }
     }
+
+    glm::vec3 calculate_intensity(float light_distance) {
+        float total_attenuation = attenuation.x + attenuation.y * light_distance + attenuation.z * std::pow(light_distance,2);
+        glm::vec3 total_intensity = color / total_attenuation;
+
+        return total_intensity;
+    }
 };
 
 #endif

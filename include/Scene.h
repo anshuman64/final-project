@@ -23,10 +23,14 @@ public:
     std::vector<Geometry*> geometries;
     std::vector<Light*> lights;
 
-    Ray rayThruPixel(int i, int j);
+    Ray rayThruPixel(int i, int j, bool use_gi);
     Intersection intersect(Ray* ray);
+
+    glm::vec3 calculate_hit_color(Intersection* hit, std::string color_type, bool use_shadows);
     glm::vec3 findColor(Intersection* hit, bool use_shadows, bool use_mirror, int mirror_depth);
-    Image rayTrace(bool use_shadows, bool use_mirror);
+    glm::vec3 russianRoulette(int i, int j, int K, float lambda, bool use_shadows);
+
+    Image rayTrace(bool use_shadows, bool use_mirror, bool use_gi, int K, float lambda);
 
     ~Scene() {
         delete camera;
