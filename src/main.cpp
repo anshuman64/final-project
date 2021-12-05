@@ -260,8 +260,17 @@ int main(int argc, char* argv[])
     Scene scene;
     readfile(argv[1], &scene);
 
-    bool use_shadows = false;
-    bool use_mirror  = false;
+    bool use_shadows = true;
+    bool use_mirror  = true;
+
+    for (int i = 1; i < argc; i++) {
+        if (string(argv[i]) == "no_shadows") {
+            use_shadows = false;
+        } else if (string(argv[i]) == "no_mirror") {
+            use_mirror = false;
+        }
+    }
+
     Image image = scene.rayTrace(use_shadows, use_mirror);
 
     // Take screenshot
