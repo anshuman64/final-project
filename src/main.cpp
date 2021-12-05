@@ -18,15 +18,15 @@
 #include <GL/glut.h>
 #endif
 
-#define GLM_FORCE_RADIANS // Use of degrees is deprecated. Use radians for GLM functions
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "Scene.h"
 #include "Sphere.h"
 #include "Triangle.h"
 
-
 using namespace std;
+
 
 //////////////////////
 // Parse File
@@ -58,7 +58,7 @@ void readfile(const char* filename, Scene* scene) {
 
     // Lights
     int numused = 0;
-    const int numLights = 10; // max 10 point lights.  You can increase this if you want to add more lights.
+    const int numLights = 10; // max 10 lights
     glm::vec3 attenuation = glm::vec3(1.0f, 0.0f, 0.0f);
 
     // Materials
@@ -79,7 +79,6 @@ void readfile(const char* filename, Scene* scene) {
                 // Ruled out comment and blank lines
                 stringstream s(str);
                 s >> cmd;
-                int i;
 
                 // GENERAL //
                 if (cmd == "size") {
@@ -94,12 +93,13 @@ void readfile(const char* filename, Scene* scene) {
                         scene->max_depth = values[0];
                     }
                 } else if (cmd == "output") {
-                    // Do nothing
+                    string filename = "./output/" + str.substr(7, str.size());
+                    scene->filename = filename;
                 }
 
                 // CAMERA //
                 else if (cmd == "camera") {
-                    validinput = readvals(s,10,values); // 10 values eye cen up fov
+                    validinput = readvals(s,10,values);
                     if (validinput) {
                         glm::vec3 eye = glm::vec3(values[0], values[1], values[2]);
                         glm::vec3 target = glm::vec3(values[3], values[4], values[5]);
@@ -112,10 +112,10 @@ void readfile(const char* filename, Scene* scene) {
 
                 // LIGHTS //
                 else if (cmd == "point") {
-                    if (numused == numLights) { // No more Lights
+                    if (numused == numLights) {
                         cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
                     } else {
-                        validinput = readvals(s, 6, values); // Position/color for lts.
+                        validinput = readvals(s, 6, values); 
                         if (validinput) {
                             glm::vec3 location = glm::vec3(values[0], values[1], values[2]);
                             glm::vec3 color = glm::vec3(values[3], values[4], values[5]);
@@ -127,10 +127,10 @@ void readfile(const char* filename, Scene* scene) {
                         }
                     }
                 } else if (cmd == "directional") {
-                    if (numused == numLights) { // No more Lights
+                    if (numused == numLights) {
                         cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
                     } else {
-                        validinput = readvals(s, 6, values); // Position/color for lts.
+                        validinput = readvals(s, 6, values);
                         if (validinput) {
                             glm::vec3 location = glm::vec3(values[0], values[1], values[2]);
                             glm::vec3 color = glm::vec3(values[3], values[4], values[5]);
@@ -255,10 +255,10 @@ void readfile(const char* filename, Scene* scene) {
 // Main
 ////////////////
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
     Scene scene;
-    readfile("./submissionscenes/scene5.test", &scene);
+    readfile(argv[1], &scene);
 
     bool use_shadows = false;
     bool use_mirror  = false;
@@ -280,7 +280,7 @@ int main(int argc, char** argv)
     }
     
     std::cout << "Saving screenshot: " << scene.filename << std::endl;
-    FreeImage_Save(FIF_PNG, img, scene.filename, 0);
+    FreeImage_Save(FIF_PNG, img, scene.filename.c_str(), 0);
     FreeImage_DeInitialise();
 
     return 0;

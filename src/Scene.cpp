@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Intersection.h"
 
+
 Ray Scene::rayThruPixel(int i, int j) {
     glm::vec3 point = camera->eye;
 
@@ -15,7 +16,7 @@ Ray Scene::rayThruPixel(int i, int j) {
     float b = 1 - 2 * (j + 0.5f) / height;
     b = b * fovy_tan;
 
-    glm::vec3 direction = glm::normalize(a * glm::vec3(camera->cam[0]) + b * glm::vec3(camera->cam[1]) - glm::vec3(camera->cam[2]));
+    glm::vec3 direction = glm::normalize(a * glm::vec3(camera->camera_matrix[0]) + b * glm::vec3(camera->camera_matrix[1]) - glm::vec3(camera->camera_matrix[2]));
 
     Ray ray = Ray(point, direction);
     return ray;
@@ -76,6 +77,7 @@ glm::vec3 Scene::findColor(Intersection* hit, bool use_shadows, bool use_mirror,
         }
 
         if (use_mirror && mirror_depth < max_depth) {
+            // Cast mirror ray
             glm::vec3 mirror_direction = 2 * glm::dot(hit->normal, hit->direction) * hit->normal - hit->direction;
             offset_hit_position = hit->position + 0.001f * mirror_direction;
             Ray mirror_ray = Ray(offset_hit_position, mirror_direction);
@@ -91,7 +93,6 @@ glm::vec3 Scene::findColor(Intersection* hit, bool use_shadows, bool use_mirror,
 Image Scene::rayTrace(bool use_shadows, bool use_mirror) {
     Image image;
     image.resize(width);
-
     for (int i = 0; i < width; i++) {
         image[i].resize(height);
     }

@@ -16,7 +16,7 @@ public:
     int width;
     int height;
     int max_depth = 5;
-    const char* filename = "./output/raytrace.png";
+    std::string filename = "./output/raytrace.png";
 
     Camera* camera;
     std::vector<glm::vec3> vertices;
