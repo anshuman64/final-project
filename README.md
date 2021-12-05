@@ -1,6 +1,6 @@
 # Raytracer
 
-Raytracing renderer based on UCSD CS167 Fall 2021 project spec by Professor Albert Chern. Features Monte Carlo path tracing, shadows, reflections, global illumination.
+Raytracing renderer based on UCSD CS167 Fall 2021 project spec by Professor Albert Chern. Features Monte Carlo path tracing, shadows, reflections, and global illumination.
 
 ## Examples
 #### Submission Scene 6 

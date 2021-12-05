@@ -1,3 +1,4 @@
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 
@@ -35,14 +36,15 @@ Ray Intersection::get_diffuse_ray() {
     glm::vec3 up = glm::vec3(0.0f, 0.0f, 1.0f);
 
     // Generate sample
-    float s = rand() / RAND_MAX;
-    float t = rand() / RAND_MAX;
+    float s = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    float t = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 
     float u = 2 * M_PI * s;
     float v = sqrt(1 - t);
 
-    glm::vec3 diffuse_direction = glm::normalize(glm::vec3(v * cos(u), t, v * sin(u)));
+    glm::vec3 diffuse_direction = glm::normalize(glm::vec3(v * cos(u), sqrt(t), v * sin(u)));
 
+    // Source: https://graphicscompendium.com/raytracing/19-monte-carlo
     // If normal & up are in same direction...
     if (normal == -1.0f * up) {
         diffuse_direction = -1.0f * diffuse_direction;
