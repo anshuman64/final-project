@@ -18,15 +18,15 @@ Raytracing renderer based on UCSD CS167 Fall 2021 project spec by Professor Albe
 <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene4-ambient.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene4-diffuse.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene4-specular.png" width="300" />
 
 #### Path Tracer - Scene 6
-1. num_samples = 1, bounce_probability = 0.5
-2. num_samples = 10, bounce_probability = 0.5
+1. num_samples = 1, terminate_probability = 0.01
+2. num_samples = 100, terminate_probability = 0.5
 
 <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k1-l99.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k100-l50.png" width="300" />
 
 ## Usage
 After cloning the repo, run the Raytracer executable as follows:
 
-```./Raytracer [path_to_test_file] [no_shadows] [no_mirror] [no_gi] [num_samples] [bounce_probability]```
+```./Raytracer [path_to_test_file] [no_shadows] [no_mirror] [no_gi] [num_samples] [terminate_probability]```
 
 #### Command Line Args:
 - ```path_to_test_file```: path to .test input file. See ```./testscenes``` and ```./submissionscenes``` for examples. 
@@ -34,6 +34,6 @@ After cloning the repo, run the Raytracer executable as follows:
 - ```no_mirror```: turn off mirror reflections (with ```no_gi``` only)
 - ```no_gi```: turn off global illumination using Monte Carlo path tracing
 - ```num_samples``` (ie. *K*): number of ray samples per pixel for Monte Carlo path tracing. Default = 1.
-- ```bounce_probability``` (ie. *lambda*): probability each ray will bounce for Monte Carlo path tracing. Default = 0.5.
+- ```terminate_probability``` (ie. *lambda*): probability each ray will NOT bounce for Monte Carlo path tracing. Default = 0.5.
 
 **Note**: Program takes long time to run on laptop CPUs.
