@@ -8,20 +8,20 @@ Raytracing renderer based on UCSD CS167 Fall 2021 project spec by Professor Albe
 2. No shadows or mirror reflections
 3. Shadows but no mirror reflections
 
-<img src="https://github.com/anshuman64/raytracer/blob/master/output/scene6.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/output/scene6-no-shadows.png" width="300" /><img src="https://github.com/anshuman64/raytracer/blob/master/output/scene6-no-mirror.png" width="300" />
+<img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-no-shadows.png" width="300" /><img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-no-mirror.png" width="300" />
 
 #### Submission Scene 4
 1. Ambient / Emission color only
 2. Diffuse color only
 3. Specular color only
 
-<img src="https://github.com/anshuman64/raytracer/blob/master/output/scene4-ambient.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/output/scene4-diffuse.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/output/scene4-specular.png" width="300" />
+<img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene4-ambient.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene4-diffuse.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene4-specular.png" width="300" />
 
 #### Path Tracer - Scene 6
 1. num_samples = 1, bounce_probability = 0.5
 2. num_samples = 10, bounce_probability = 0.5
 
-<img src="https://github.com/anshuman64/raytracer/blob/master/output/scene6-k1-l05.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/output/scene6-k10-l05.png" width="300" />
+<img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k1-l99.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k100-l50.png" width="300" />
 
 ## Usage
 After cloning the repo, run the Raytracer executable as follows:
