@@ -268,21 +268,21 @@ int main(int argc, char* argv[])
 
     for (int i = 2; i < argc; i++) {
         if (string(argv[i]) == "no_shadows") {
-            std::cout << "no_shadows";
+            std::cout << "no_shadows" << std::endl;
             use_shadows = false;
         } else if (string(argv[i]) == "no_mirror") {
-            std::cout << "no_mirror";
+            std::cout << "no_mirror" << std::endl;
             use_mirror = false;
         } else if (string(argv[i]) == "no_gi") {
-            std::cout << "no_gi";
+            std::cout << "no_gi" << std::endl;
             use_gi = false;
         } else {
-            float value = isdigit(atoi(argv[i]));
+            float value = atoi(argv[i]);
 
-            if (int(value) == value) {
-                K = value;
+            if (value == 0) {
+                lambda = std::stof(argv[i]);
             } else {
-                lambda = value;
+                K = value;
             }
         }
     }
