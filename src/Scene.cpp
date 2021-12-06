@@ -111,6 +111,7 @@ glm::vec3 Scene::russianRoulette(int i, int j, int K, float lambda, bool use_sha
         glm::vec3 color = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 total_weight = glm::vec3(1.0f, 1.0f, 1.0f);
         float factor = 1.0f;
+        int path_length = 1;
 
         Ray ray = rayThruPixel(i, j, true);
 
@@ -133,11 +134,11 @@ glm::vec3 Scene::russianRoulette(int i, int j, int K, float lambda, bool use_sha
 
                 if (rand() < (RAND_MAX * 0.5f)) {
                     // If diffuse...
-                    total_weight *= calculate_hit_color(&hit, "diffuse", use_shadows);
+                    total_weight *= hit.material->diffuse;
                     ray = hit.get_diffuse_ray();
                 } else {
                     // Else if specular...
-                    total_weight *= calculate_hit_color(&hit, "specular", use_shadows);
+                    total_weight *= hit.material->specular;
                     ray = hit.get_mirror_ray();
                 }
             }
