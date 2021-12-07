@@ -1,16 +1,16 @@
 # Raytracer
 
-Raytracing renderer based on UCSD CS167 Fall 2021 project spec by Professor Albert Chern. Features Monte Carlo path tracing, shadows, reflections, and global illumination.
+Raytracing graphics renderer based on UC San Diego CS167 Fall 2021 Computer Graphics project spec by Professor Albert Chern. Features Monte Carlo path tracing, shadows, reflections, and global illumination. For MacOS.
 
 ## Examples
-#### Submission Scene 6 
+#### Raytracer - Scene 6 
 1. Raytracing with shadows & mirror reflections
 2. No shadows or mirror reflections
 3. Shadows but no mirror reflections
 
 <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-no-shadows.png" width="300" /><img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-no-mirror.png" width="300" />
 
-#### Submission Scene 4
+#### Raytracer - Scene 4
 1. Ambient / Emission color only
 2. Diffuse color only
 3. Specular color only
@@ -19,9 +19,10 @@ Raytracing renderer based on UCSD CS167 Fall 2021 project spec by Professor Albe
 
 #### Path Tracer - Scene 6
 1. num_samples = 1, terminate_probability = 0.01
-2. num_samples = 100, terminate_probability = 0.5
+2. num_samples = 10, terminate_probability = 0.5
+3. num_samples = 100, terminate_probability = 0.33
 
-<img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k1-l99.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k100-l50.png" width="300" />
+<img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k1-l99.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k10-l50.png" width="300" /> <img src="https://github.com/anshuman64/raytracer/blob/master/saved_output/scene6-k100-l33.png" width="300" />
 
 ## Usage
 After cloning the repo, run the Raytracer executable as follows:
